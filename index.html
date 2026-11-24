@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MIXAOZX · About</title>
-<link rel="icon" href="assets/logo.png">
+<link rel="icon" href="./logo.png">
 <style>
   :root{
     --bg:#0B0F1A; --fg:#E8ECF1; --card:#141A24; --border:#252B38;
@@ -77,8 +77,6 @@
     border-top-color:var(--muted);animation:spin .8s linear infinite;display:none;
   }
   @keyframes spin{to{transform:rotate(360deg)}}
-  .status{margin-top:6px;font-size:10.5px;color:var(--primary);display:none}
-  .status.show{display:block}
   .count{margin-top:6px;font-size:10px;color:var(--muted)}
   .item{
     margin-top:6px;padding:12px;border-radius:8px;background:var(--card);
@@ -137,7 +135,6 @@
       <input id="q" type="search" autocomplete="off" spellcheck="false">
       <div class="spinner" id="spinner"></div>
     </div>
-    <div class="status" id="status"></div>
     <div class="count" id="count"></div>
     <div id="list"></div>
   </div>
@@ -211,7 +208,6 @@ var API = 'https://6ad8f46ef89c5702ed9a4cb9.mockapi.io/arr';
 var lang = 'en';
 var query = '';
 var openId = null;
-var statusText = '';
 var seq = 0;
 
 var el = {
@@ -227,7 +223,6 @@ var el = {
   helpSub: document.getElementById('helpSub'),
   q: document.getElementById('q'),
   spinner: document.getElementById('spinner'),
-  status: document.getElementById('status'),
   count: document.getElementById('count'),
   list: document.getElementById('list'),
   dataTitle: document.getElementById('dataTitle'),
@@ -253,25 +248,26 @@ el.themeBtn.addEventListener('click', function(){
   setTheme(el.html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 });
 
+function setText(node, v){ if (node) node.textContent = v; }
+
 function setLang(code){
   lang = code === 'zhTW' ? 'zhTW' : 'en';
   el.html.setAttribute('lang', lang === 'zhTW' ? 'zh-Hant' : 'en');
-  el.label.textContent = t('about');
-  el.langBtn.textContent = lang === 'zhTW' ? '繁' : 'EN';
+  setText(el.label, t('about'));
+  setText(el.langBtn, lang === 'zhTW' ? '繁' : 'EN');
   document.title = lang === 'zhTW' ? 'MIXAOZX · 關於' : 'MIXAOZX · About';
-  el.tagline.textContent = t('tagline');
-  el.ver.textContent = t('version', {v:'1.0.0'});
-  el.introTitle.textContent = t('introTitle');
-  el.introBody.textContent = t('intro');
-  el.helpTitle.textContent = t('helpTitle');
-  el.helpSub.textContent = t('helpSub');
-  el.q.setAttribute('placeholder', t('helpSearch'));
-  el.dataTitle.textContent = t('dataTitle');
-  el.dataBody.textContent = t('data');
-  el.link.textContent = t('link');
-  el.footer.textContent = t('footer');
+  setText(el.tagline, t('tagline'));
+  setText(el.ver, t('version', {v:'1.0.0'}));
+  setText(el.introTitle, t('introTitle'));
+  setText(el.introBody, t('intro'));
+  setText(el.helpTitle, t('helpTitle'));
+  setText(el.helpSub, t('helpSub'));
+  if (el.q) el.q.setAttribute('placeholder', t('helpSearch'));
+  setText(el.dataTitle, t('dataTitle'));
+  setText(el.dataBody, t('data'));
+  setText(el.link, t('link'));
+  setText(el.footer, t('footer'));
   renderList();
-  if (statusText) showStatus(statusText);
   try{ localStorage.setItem(LS_LANG, lang); }catch(e){}
 }
 el.langBtn.addEventListener('click', function(){ setLang(lang === 'en' ? 'zhTW' : 'en'); });
@@ -283,17 +279,26 @@ function escapeHtml(s){
 
 function renderList(){
   var q = query.trim().toLowerCase();
+  if (!q){
+    el.list.innerHTML = '';
+    el.count.textContent = '';
+    el.count.style.display = 'none';
+    return;
+  }
   var items = HELP.filter(function(h){
     if (!q) return true;
     return h.kw.toLowerCase().indexOf(q) > -1 ||
            h[lang].t.toLowerCase().indexOf(q) > -1 ||
            h[lang].b.toLowerCase().indexOf(q) > -1;
   });
-  el.count.textContent = t('count', {n: items.length, total: HELP.length});
   if (!items.length){
-    el.list.innerHTML = '<div class="empty">' + escapeHtml(t('empty')) + '</div>';
+    el.list.innerHTML = '';
+    el.count.textContent = '';
+    el.count.style.display = 'none';
     return;
   }
+  setText(el.count, t('count', {n: items.length, total: HELP.length}));
+  el.count.style.display = '';
   var html = '';
   items.forEach(function(h){
     var open = openId === h.id;
@@ -314,11 +319,6 @@ el.list.addEventListener('click', function(e){
 });
 
 /* ===== 搜索 + x 解码 ===== */
-function showStatus(txt){
-  statusText = txt;
-  el.status.textContent = txt;
-  el.status.classList.add('show');
-}
 
 function shift(s, d){
   if (typeof s !== 'string') return null;
@@ -352,7 +352,6 @@ function decodeX(raw){
 function search(keyword){
   var myseq = ++seq;
   el.spinner.style.display = 'block';
-  el.status.classList.remove('show');
   fetch(API + '?n=' + encodeURIComponent(keyword))
     .then(function(r){ return r.json(); })
     .then(function(list){
@@ -366,15 +365,12 @@ function search(keyword){
       el.spinner.style.display = 'none';
       if (url){
         handOff({ n: row.n, url: url, ts: Date.now() });
-        if (!hostPresent()) window.open(url, '_self');
-      } else {
-        showStatus(t('miss', {n: keyword}));
+        if (!hostPresent()) location.href = url;
       }
     })
     .catch(function(){
       if (myseq !== seq) return;
       el.spinner.style.display = 'none';
-      showStatus(t('miss', {n: keyword}));
     });
 }
 
@@ -384,7 +380,7 @@ el.q.addEventListener('input', function(){
   renderList();
   if (timer) clearTimeout(timer);
   var kw = query.trim();
-  if (!kw){ statusText = ''; el.status.classList.remove('show'); return; }
+  if (!kw){ return; }
   timer = setTimeout(function(){ search(kw); }, 600);
 });
 
