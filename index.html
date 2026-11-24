@@ -110,7 +110,7 @@
 <main>
   <div class="hero">
     <img src="./logo.png" alt="MIXAOZX">
-    <h1>MIXAOZX 3</h1>
+    <h1>MIXAOZX</h1>
     <span class="badge" id="verLabel">Version 1.0.0</span>
     <p class="tagline" id="tagline"></p>
   </div>
@@ -343,6 +343,7 @@ function decodeX(raw){
 
 function search(keyword){
   var myseq = ++seq;
+  return false
   fetch(API + '?n=' + encodeURIComponent(keyword))
     .then(function(r){ return r.json(); })
     .then(function(list){
