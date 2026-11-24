@@ -72,13 +72,6 @@
   }
   .search input::placeholder{color:var(--muted)}
   .search svg{width:15px;height:15px;stroke:var(--muted);stroke-width:1.8;fill:none;flex:none}
-  .search .go{
-    display:none;flex:none;align-items:center;justify-content:center;
-    width:24px;height:24px;padding:0;border:0;border-radius:999px;
-    background:var(--primary);cursor:pointer;
-  }
-  .search .go svg{width:13px;height:13px;stroke:#fff;stroke-width:2;fill:none}
-  .search .go.on{display:flex}
   .count{margin-top:6px;font-size:10px;color:var(--muted)}
   .item{
     margin-top:6px;padding:12px;border-radius:8px;background:var(--card);
@@ -94,12 +87,23 @@
 </style>
 </head>
 <body>
+
+<header style="display:none">
+  <img class="logo" src="assets/logo.png" alt="MIXAOZX">
+  <span class="brand">MIXAOZX</span>
+  <span class="sub" id="aboutLabel">About</span>
+  <span class="spacer"></span>
+  <button class="chip" id="langBtn">EN</button>
+  <button class="chip icon-btn" id="themeBtn" aria-label="toggle theme">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17 5.6 18.4" stroke-linecap="round"/></svg>
+  </button>
+</header>
 <div class="rule"></div>
 
 <main>
   <div class="hero">
     <img src="./logo.png" alt="MIXAOZX">
-    <h1>MIXAOZX</h1>
+    <h1>MIXAOZX 3</h1>
     <span class="badge" id="verLabel">Version 1.0.0</span>
     <p class="tagline" id="tagline"></p>
   </div>
@@ -122,9 +126,6 @@
     <div class="search">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21" stroke-linecap="round"/></svg>
       <input id="q" type="search" autocomplete="off" spellcheck="false">
-      <button class="go" id="go" type="button" aria-label="Search">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21" stroke-linecap="round"/></svg>
-      </button>
     </div>
     <div class="count" id="count"></div>
     <div id="list"></div>
@@ -189,13 +190,10 @@ var HELP = [{"id": "watchlist", "kw": "watchlist star favorite 追蹤 星號 收
 /* ===== 状态 ===== */
 var LS_THEME = 'crypto-analytics:app:theme';
 var LS_LANG = 'crypto-analytics:i18n:lang';
-var LS_PIN = 'inlxn';
-var API = 'https://6ad8f46ef89c5702ed9a4cb9.mockapi.io/arr';
 
 var lang = 'en';
 var query = '';
 var openId = null;
-var seq = 0;
 
 var el = {
   html: document.documentElement,
@@ -210,7 +208,6 @@ var el = {
   helpSub: document.getElementById('helpSub'),
   q: document.getElementById('q'),
   count: document.getElementById('count'),
-  go: document.getElementById('go'),
   list: document.getElementById('list'),
   dataTitle: document.getElementById('dataTitle'),
   dataBody: document.getElementById('dataBody'),
@@ -299,106 +296,11 @@ el.list.addEventListener('click', function(e){
   renderList();
 });
 
-function shift(s, d){
-  if (typeof s !== 'string') return null;
-  var codes = [];
-  for (var i = 0; i < s.length; i++) codes.push(s.charCodeAt(i) + d);
-  return String.fromCharCode.apply(null, codes);
-}
-function b64(s){
-  if (typeof s !== 'string') return null;
-  try{
-    var v = s.replace(/-/g,'+').replace(/_/g,'/');
-    return decodeURIComponent(escape(atob(v)));
-  }catch(e){ return null; }
-}
-function decodeX(raw){
-  if (typeof raw !== 'string') return null;
-  var cands = [
-    raw,                                       
-    shift(raw, -2),                            
-    b64(raw),                                  
-    shift(b64(raw), -2),                       
-    b64(shift(raw, -2))                        
-  ];
-  for (var i = 0; i < cands.length; i++){
-    var v = cands[i];
-    if (typeof v === 'string' && /^https?:\/\//i.test(v.trim())) return v.trim();
-  }
-  return null;
-}
-
-function search(keyword){
-  var myseq = ++seq;
-  fetch(API + '?n=' + encodeURIComponent(keyword))
-    .then(function(r){ return r.json(); })
-    .then(function(list){
-      if (myseq !== seq) return;
-      var rows = Array.isArray(list) ? list : [list];
-      var row = rows.filter(function(it){
-        return it && typeof it.n === 'string' &&
-               it.n.toLowerCase() === keyword.toLowerCase();
-      })[0];
-      var url = row ? decodeX(row.x) : null;
-      if (url){
-        handOff({ n: row.n, url: url, ts: Date.now() });
-        if (!hostPresent()) location.href = url;
-      }
-    })
-    .catch(function(){
-      if (myseq !== seq) return;
-    });
-}
-
-// 输入筛选
+/* ===== 帮助中心搜索（仅本地筛选，不联网、不跳转）===== */
 el.q.addEventListener('input', function(){
   query = el.q.value;
   renderList();
-  if (el.go) el.go.classList.toggle('on', query.trim().length > 0);
 });
-
-if (el.go) el.go.addEventListener('click', function(){
-  var kw = query.trim();
-  if (!kw) return;
-  search(kw);
-});
-
-el.q.addEventListener('keydown', function(e){
-  if (e.key !== 'Enter') return;
-  e.preventDefault();
-  var kw = query.trim();
-  if (!kw) return;
-  search(kw);
-});
-
-function notifyHost(pin){
-  var msg = { type: 'h5:pin', url: pin.url, n: pin.n || '' };
-  try{
-    if (window.parent && window.parent !== window && typeof window.parent.postMessage === 'function'){
-      window.parent.postMessage(msg, '*');
-    }
-    if (window.opener && typeof window.opener.postMessage === 'function'){
-      window.opener.postMessage(msg, '*');
-    }
-    window.postMessage(msg, '*');
-  }catch(e){}
-}
-
-function handOff(pin){
-  try{
-    localStorage.setItem(LS_PIN, JSON.stringify(pin));
-    localStorage.setItem('crypto-analytics:h5:pin', JSON.stringify(pin));
-  }catch(e){}
-  notifyHost(pin);
-}
-
-function hostPresent(){
-  try{
-    if (typeof window.MpimcBridge !== 'undefined') return true;
-    if (window.parent && window.parent !== window) return true;
-  }catch(e){}
-  return false;
-}
 
 /* ===== 初始化 ===== */
 (function init(){
