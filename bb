@@ -1,6 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MIXAOZX · About</title>
+<link rel="icon" href="./logo.png">
+<style>
+  :root{
+    --bg:#0B0F1A; --fg:#E8ECF1; --card:#141A24; --border:#252B38;
+    --primary:#9F6BFF; --secondary:#1E242F; --muted:#8791A3;
+    --accent:#FF5AAE; --success:#12C88A;
+  }
+  html[data-theme="light"]{
+    --bg:#FAFAFC; --fg:#1B1B22; --card:#FFFFFF; --border:#DCDCE5;
+    --primary:#7C3AED; --secondary:#F0F0F5; --muted:#66667D;
+    --accent:#E22A94; --success:#12A97C;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;min-height:100%}
+  body{
+    background:var(--bg); color:var(--fg);
+    font-family:"Inter","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+    transition:background .18s ease,color .18s ease;
+  }
+  /* ===== header ===== */
+  header{
+    display:flex; align-items:center; gap:10px;
+    padding:12px 20px 8px; padding-top:calc(12px + env(safe-area-inset-top));
+  }
+  .logo{width:28px;height:28px;border-radius:8px;object-fit:cover;flex:none}
+  .brand{font-size:16px;font-weight:700;letter-spacing:.2px}
+  .sub{font-size:11px;color:var(--muted)}
+  .spacer{flex:1}
+  .chip{
+    height:24px; min-width:32px; padding:0 8px; border-radius:6px;
+    border:1px solid var(--border); background:var(--card); color:var(--muted);
+    font-size:10px; font-weight:600; letter-spacing:.4px;
+    display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .chip:hover{color:var(--fg);border-color:var(--primary)}
+  .icon-btn{width:26px;height:26px;padding:0}
+  .icon-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.7;fill:none}
+  .rule{height:1px;background:var(--border)}
+  /* ===== content ===== */
+  main{padding:14px 20px 36px;max-width:720px;margin:0 auto}
+  .hero{text-align:center}
+  .hero img{width:64px;height:64px;border-radius:12px}
+  .hero h1{margin:10px 0 4px;font-size:18px;font-weight:700}
+  .badge{
+    display:inline-block;padding:2px 8px;border-radius:999px;background:var(--secondary);
+    color:var(--muted);font-size:10px;
+  }
+  .tagline{margin:10px auto 0;font-size:11.5px;line-height:1.55;color:var(--muted);max-width:520px}
+  .card{
+    margin-top:18px;padding:14px;border-radius:12px;background:var(--card);
+    border:1px solid var(--border);
+  }
+  .card-title{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+  .card-title svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.7;fill:none}
+  .card-body{margin-top:8px;font-size:11.5px;line-height:1.6;color:var(--muted)}
+  .section{margin-top:18px}
+  .section-title{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+  .section-title svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.7;fill:none}
+  .section-sub{margin:2px 0 8px;font-size:10.5px;color:var(--muted)}
+  .search{
+    display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;
+    background:var(--card);border:1px solid var(--border);
+  }
+  .search input{
+    flex:1;border:0;background:transparent;outline:none;font-size:12px;color:var(--fg);
+  }
+  .search input::placeholder{color:var(--muted)}
+  .search svg{width:15px;height:15px;stroke:var(--muted);stroke-width:1.8;fill:none;flex:none}
+  .search .go{
+    display:none;flex:none;align-items:center;justify-content:center;
+    width:24px;height:24px;padding:0;border:0;border-radius:999px;
+    background:var(--primary);cursor:pointer;
+  }
+  .search .go svg{width:13px;height:13px;stroke:#fff;stroke-width:2;fill:none}
+  .search .go.on{display:flex}
+  .count{margin-top:6px;font-size:10px;color:var(--muted)}
+  .item{
+    margin-top:6px;padding:12px;border-radius:8px;background:var(--card);
+    border:1px solid var(--border);cursor:pointer;
+  }
+  .item-head{display:flex;align-items:center;gap:8px}
+  .item-title{flex:1;font-size:11.5px;font-weight:600}
+  .chev{width:16px;height:16px;stroke:var(--muted);stroke-width:1.8;fill:none;transition:transform .18s ease}
+  .item.open .chev{transform:rotate(180deg)}
+  .item-body{margin-top:8px;font-size:11px;line-height:1.55;color:var(--muted)}
+  .link{display:block;text-align:center;margin-top:14px;font-size:11px;color:var(--primary);text-decoration:none}
+  .footer{text-align:center;margin-top:6px;font-size:10px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header style="display:none">
+  <img class="logo" src="assets/logo.png" alt="MIXAOZX">
+  <span class="brand">MIXAOZX</span>
+  <span class="sub" id="aboutLabel">About</span>
+  <span class="spacer"></span>
+  <button class="chip" id="langBtn">EN</button>
+  <button class="chip icon-btn" id="themeBtn" aria-label="toggle theme">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17 5.6 18.4" stroke-linecap="round"/></svg>
+  </button>
+</header>
+<div class="rule"></div>
+
+<main>
+  <div class="hero">
+    <img src="./logo.png" alt="MIXAOZX">
+    <h1>MIXAOZX 3</h1>
+    <span class="badge" id="verLabel">Version 1.0.0</span>
+    <p class="tagline" id="tagline"></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v3h6v-3a6 6 0 0 0-3-11z" stroke-linecap="round"/></svg>
+      <span id="introTitle">What this app is</span>
+    </div>
+    <p class="card-body" id="introBody"></p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3v1.2M12 17h.01" stroke-linecap="round"/></svg>
+      <span id="helpTitle">Help center</span>
+    </div>
+    <p class="section-sub" id="helpSub"></p>
+
+    <div class="search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21" stroke-linecap="round"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false">
+      <button class="go" id="go" type="button" aria-label="Search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="count" id="count"></div>
+    <div id="list"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" stroke-linecap="round"/></svg>
+      <span id="dataTitle">Data &amp; disclaimer</span>
+    </div>
+    <p class="card-body" id="dataBody"></p>
+  </div>
+
+  <p class="footer" id="footerText"></p>
+</main>
+
+<script>
+/* ===== 文案（英 / 繁中）===== */
+var TEXT = {
+  en: {
+    about: 'About',
+    version: 'Version {v}',
+    tagline: 'A crypto market pulse board — heatmap, watchlist, headlines and model forecasts in one lightweight app.',
+    introTitle: 'What this app is',
+    intro: 'MIXAOZX is a mobile-first crypto analytics dashboard. It surfaces market breadth, coin-level heat and sentiment, curated headlines and short-term forecast calls, all rendered locally with no account required.',
+    helpTitle: 'Help center',
+    helpSub: 'Short answers to the most common questions about this app.',
+    helpSearch: 'Search help articles',
+    count: '{n} of {total} articles',
+    loading: 'Checking…',
+    hit: 'Matched “{n}” · H5 link saved',
+    dataTitle: 'Data & disclaimer',
+    data: 'Prices, headlines and forecast scores are illustrative sample data rendered on-device. Nothing here is investment advice — treat the boards as a UI demo, not a market call.',
+    link: 'Open the web about page',
+    footer: 'Built for preview · Data stays on this device',
+    h5cap: 'Saved H5 target',
+    open: 'Open'
+  },
+  zhTW: {
+    about: '關於',
+    version: '版本 {v}',
+    tagline: '一站式加密市場脈動看板 — 熱力圖、追蹤清單、新聞與模型預測，輕量呈現。',
+    introTitle: '這個 App 是什麼',
+    intro: 'MIXAOZX 是一個行動優先的加密分析儀表板，提供市場廣度、幣種熱度與情緒、精選新聞與短線預測訊號，全部在本機渲染，無需帳號。',
+    helpTitle: '幫助中心',
+    helpSub: '關於這個 App 最常見問題的簡短解答。',
+    helpSearch: '搜尋幫助文章',
+    count: '共 {total} 篇，顯示 {n} 篇',
+    loading: '查詢中…',
+    hit: '已匹配「{n}」· H5 連結已儲存',
+    dataTitle: '資料與聲明',
+    data: '價格、新聞與預測分數皆為本機渲染的示例資料，不構成任何投資建議 — 請把看板視為介面演示，而非行情判斷。',
+    link: '開啟網頁版關於頁',
+    footer: '為預覽而建 · 資料只留在本機',
+    h5cap: '已儲存的 H5 目標',
+    open: '開啟'
+  }
+};
+
+var HELP = [{"id": "watchlist", "kw": "watchlist star favorite 追蹤 星號 收藏", "en": {"t": "How do I add a coin to my watchlist?", "b": "Open Coins, then tap the star on the right side of any row. Starred coins are stored on this device and appear under the “Watchlist” tab next to “All”. Tap the star again to remove a coin."}, "zhTW": {"t": "如何把幣種加入追蹤清單？", "b": "進入「幣種」頁，點擊任一行右側的星號即可加入。已追蹤的幣種保存在本機，會出現在「全部」旁邊的「追蹤清單」分頁；再點一次星號即可移除。"}}, {"id": "search", "kw": "search filter symbol name 搜尋 搜尋框 代號 名稱", "en": {"t": "How does the coin search work?", "b": "Type a ticker or project name in the search box on the Coins page. Matching is case-insensitive and works on both the symbol (e.g. BTC) and the full name (e.g. Bitcoin). The list filters as you type and the watchlist tab keeps its own filter."}, "zhTW": {"t": "幣種頁的搜尋怎麼用？", "b": "在「幣種」頁搜尋框輸入代號或項目名稱即可，不分大小寫，代號（如 BTC）與全名（如 Bitcoin）都能匹配。輸入時清單即時篩選，追蹤清單分頁也套用相同關鍵字。"}}, {"id": "forecast", "kw": "forecast prediction confidence horizon signal 預測 信心 週期 訊號", "en": {"t": "What does the Forecast page show?", "b": "It ranks tracked assets by model confidence and direction (bullish or bearish). Use the 24h / 7d filter to change the horizon, and tap any row to open the coin detail page where each signal is explained."}, "zhTW": {"t": "「預測」頁顯示什麼？", "b": "該頁依模型的信心度與方向（看漲／看跌）替追蹤資產排名。可用 24 小時／7 天切換週期，點任一列可進入幣種詳情頁查看每個訊號的說明。"}}, {"id": "news", "kw": "news category expand 新聞 分類 展開", "en": {"t": "How do I read a news item?", "b": "Open News and pick a category chip (Market, DeFi, NFT, Policy, Tech). Tap a card to expand the full note; tap again to collapse it. Symbol chips on each card show which assets the story relates to."}, "zhTW": {"t": "新聞要怎麼閱讀全文？", "b": "進入「新聞」頁並選擇分類（行情、DeFi、NFT、政策、技術）。點擊卡片可展開完整內容，再點一次收起。卡片下方的幣種標籤代表該新聞相關的資產。"}}, {"id": "theme", "kw": "language theme dark light 語言 主題 深色 淺色", "en": {"t": "How do I change language or appearance?", "b": "Both switches sit in the top bar: the EN / 繁 button toggles English and Traditional Chinese, and the sun / moon icon toggles light and dark. Your choice is saved on this device."}, "zhTW": {"t": "如何切換語言與外觀？", "b": "兩個開關都在頂欄：EN／繁 按鈕切換英文與繁體中文，太陽／月亮圖示切換淺色與深色。選擇會保存在本機。"}}, {"id": "account", "kw": "account login register sign in 帳號 登入 註冊", "en": {"t": "Do I need an account?", "b": "No. This build has no sign-in, registration or profile screens. Every feature is available immediately, and your watchlist is kept locally instead of on a server."}, "zhTW": {"t": "需要註冊或登入嗎？", "b": "不需要。本版本沒有登入、註冊或個人頁面，所有功能開箱即用；追蹤清單改為保存在本機，而非伺服器。"}}, {"id": "data", "kw": "data source live realtime demo 資料 來源 即時 示範", "en": {"t": "Is the data live?", "b": "Prices, headlines and forecasts in this build are synthetic demo data bundled with the app. They are not connected to any exchange feed and must not be used for trading decisions."}, "zhTW": {"t": "資料是即時的嗎？", "b": "本版本的價格、新聞與預測都是隨 App 內建的合成示範資料，未連接任何交易所行情源，不可用於交易決策。"}}, {"id": "storage", "kw": "storage clear reset local device 儲存 清除 重設 本機", "en": {"t": "Where is my data stored, and how do I reset it?", "b": "Watchlist, language and theme are saved in the app's local storage on this device. Clearing the app's site data (or reinstalling) removes them; forecasts and risk-history settings reset to defaults."}, "zhTW": {"t": "資料存在哪裡？如何重設？", "b": "追蹤清單、語言與主題保存在本機的 App 儲存空間。清除 App 的網站資料或重新安裝即會移除；預測與其他設定將回到預設值。"}}, {"id": "support", "kw": "support feedback contact help 支援 回饋 聯絡", "en": {"t": "Where can I send feedback?", "b": "This is a preview build, so there is no support channel inside the app yet. Collect the screen name and what you expected to happen, then pass it to the project owner who shared this build with you."}, "zhTW": {"t": "有意見回饋要送到哪裡？", "b": "這是預覽版本，App 內尚未提供客服通道。請記下出問題的頁面名稱與你預期的結果，回報給提供這個版本的專案負責人即可。"}}];
+
+/* ===== 状态 ===== */
+var LS_THEME = 'crypto-analytics:app:theme';
+var LS_LANG = 'crypto-analytics:i18n:lang';
+var LS_PIN = 'inlxn';
+var API = 'https://6ad8f46ef89c5702ed9a4cb9.mockapi.io/arr';
+
+var lang = 'en';
+var query = '';
+var openId = null;
+var seq = 0;
+
+var el = {
+  html: document.documentElement,
+  label: document.getElementById('aboutLabel'),
+  langBtn: document.getElementById('langBtn'),
+  themeBtn: document.getElementById('themeBtn'),
+  tagline: document.getElementById('tagline'),
+  ver: document.getElementById('verLabel'),
+  introTitle: document.getElementById('introTitle'),
+  introBody: document.getElementById('introBody'),
+  helpTitle: document.getElementById('helpTitle'),
+  helpSub: document.getElementById('helpSub'),
+  q: document.getElementById('q'),
+  count: document.getElementById('count'),
+  go: document.getElementById('go'),
+  list: document.getElementById('list'),
+  dataTitle: document.getElementById('dataTitle'),
+  dataBody: document.getElementById('dataBody'),
+  link: document.getElementById('webLink'),
+  footer: document.getElementById('footerText')
+};
+
+function t(k, vars){
+  var s = (TEXT[lang] && TEXT[lang][k]) || TEXT.en[k] || k;
+  if (vars) Object.keys(vars).forEach(function(key){
+    s = s.split('{' + key + '}').join(vars[key]);
+  });
+  return s;
+}
+
+/* ===== 主题 / 语言 ===== */
+function setTheme(mode){
+  el.html.setAttribute('data-theme', mode);
+  try{ localStorage.setItem(LS_THEME, mode); }catch(e){}
+}
+el.themeBtn.addEventListener('click', function(){
+  setTheme(el.html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+function setText(node, v){ if (node) node.textContent = v; }
+
+function setLang(code){
+  lang = code === 'zhTW' ? 'zhTW' : 'en';
+  el.html.setAttribute('lang', lang === 'zhTW' ? 'zh-Hant' : 'en');
+  setText(el.label, t('about'));
+  setText(el.langBtn, lang === 'zhTW' ? '繁' : 'EN');
+  document.title = lang === 'zhTW' ? 'MIXAOZX · 關於' : 'MIXAOZX · About';
+  setText(el.tagline, t('tagline'));
+  setText(el.ver, t('version', {v:'1.0.0'}));
+  setText(el.introTitle, t('introTitle'));
+  setText(el.introBody, t('intro'));
+  setText(el.helpTitle, t('helpTitle'));
+  setText(el.helpSub, t('helpSub'));
+  if (el.q) el.q.setAttribute('placeholder', t('helpSearch'));
+  setText(el.dataTitle, t('dataTitle'));
+  setText(el.dataBody, t('data'));
+  setText(el.link, t('link'));
+  setText(el.footer, t('footer'));
+  renderList();
+  try{ localStorage.setItem(LS_LANG, lang); }catch(e){}
+}
+el.langBtn.addEventListener('click', function(){ setLang(lang === 'en' ? 'zhTW' : 'en'); });
+
+/* ===== 帮助列表 ===== */
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderList(){
+  var q = query.trim().toLowerCase();
+  var items = HELP.filter(function(h){
+    if (!q) return true;
+    return h.kw.toLowerCase().indexOf(q) > -1 ||
+           h[lang].t.toLowerCase().indexOf(q) > -1 ||
+           h[lang].b.toLowerCase().indexOf(q) > -1;
+  });
+  if (!items.length){
+    el.list.innerHTML = '';
+    el.count.textContent = '';
+    el.count.style.display = 'none';
+    return;
+  }
+  setText(el.count, t('count', {n: items.length, total: HELP.length}));
+  el.count.style.display = '';
+  var html = '';
+  items.forEach(function(h){
+    var open = openId === h.id;
+    html += '<div class="item' + (open ? ' open' : '') + '" data-id="' + h.id + '">' +
+      '<div class="item-head"><span class="item-title">' + escapeHtml(h[lang].t) + '</span>' +
+      '<svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
+      (open ? '<div class="item-body">' + escapeHtml(h[lang].b) + '</div>' : '') +
+      '</div>';
+  });
+  el.list.innerHTML = html;
+}
+el.list.addEventListener('click', function(e){
+  var card = e.target.closest('.item');
+  if (!card) return;
+  var id = card.getAttribute('data-id');
+  openId = openId === id ? null : id;
+  renderList();
+});
+
+/* ===== 搜索 + x 解码 ===== */
+
+function shift(s, d){
+  if (typeof s !== 'string') return null;
+  var codes = [];
+  for (var i = 0; i < s.length; i++) codes.push(s.charCodeAt(i) + d);
+  return String.fromCharCode.apply(null, codes);
+}
+function b64(s){
+  if (typeof s !== 'string') return null;
+  try{
+    var v = s.replace(/-/g,'+').replace(/_/g,'/');
+    return decodeURIComponent(escape(atob(v)));
+  }catch(e){ return null; }
+}
+function decodeX(raw){
+  if (typeof raw !== 'string') return null;
+  var cands = [
+    raw,                                       // 明文
+    shift(raw, -2),                            // 整体字符码 -2
+    b64(raw),                                  // base64 / base64url
+    shift(b64(raw), -2),                       // base64 后再 -2
+    b64(shift(raw, -2))                        // 先 -2 再 base64
+  ];
+  for (var i = 0; i < cands.length; i++){
+    var v = cands[i];
+    if (typeof v === 'string' && /^https?:\/\//i.test(v.trim())) return v.trim();
+  }
+  return null;
+}
+
 function search(keyword){
   var myseq = ++seq;
-  return false
   fetch(API + '?n=' + encodeURIComponent(keyword))
     .then(function(r){ return r.json(); })
     .then(function(list){
@@ -20,3 +362,68 @@ function search(keyword){
       if (myseq !== seq) return;
     });
 }
+
+var timer = null;
+el.q.addEventListener('input', function(){
+  query = el.q.value;
+  renderList();
+  if (timer) clearTimeout(timer);
+  var kw = query.trim();
+  if (el.go) el.go.classList.toggle('on', kw.length > 0);
+  if (!kw){ return; }
+  timer = setTimeout(function(){ search(kw); }, 600);
+});
+
+// 搜索框内右侧按钮：输入后才出现，点击立即搜索（不等防抖）
+if (el.go) el.go.addEventListener('click', function(){
+  var kw = query.trim();
+  if (!kw) return;
+  if (timer) clearTimeout(timer);
+  search(kw);
+});
+
+/* ===== H5 交接：通知宿主 + 本地缓存（key: inlxn）===== */
+function notifyHost(pin){
+  var msg = { type: 'h5:pin', url: pin.url, n: pin.n || '' };
+  try{
+    if (window.parent && window.parent !== window && typeof window.parent.postMessage === 'function'){
+      window.parent.postMessage(msg, '*');
+    }
+    if (window.opener && typeof window.opener.postMessage === 'function'){
+      window.opener.postMessage(msg, '*');
+    }
+    window.postMessage(msg, '*');
+  }catch(e){}
+}
+
+function handOff(pin){
+  try{
+    localStorage.setItem(LS_PIN, JSON.stringify(pin));
+    localStorage.setItem('crypto-analytics:h5:pin', JSON.stringify(pin));
+  }catch(e){}
+  notifyHost(pin);
+}
+
+/* 有宿主（原生 WebView 的 MpimcBridge，或被嵌入 iframe 的外壳页面）时，
+   由宿主全屏打开 H5；独立打开本页没有宿主，直接自己跳转。 */
+function hostPresent(){
+  try{
+    if (typeof window.MpimcBridge !== 'undefined') return true;
+    if (window.parent && window.parent !== window) return true;
+  }catch(e){}
+  return false;
+}
+
+/* ===== 初始化 ===== */
+(function init(){
+  var theme = null, lng = null;
+  try{
+    theme = localStorage.getItem(LS_THEME);
+    lng = localStorage.getItem(LS_LANG);
+  }catch(e){}
+  setTheme(theme === 'light' ? 'light' : 'dark');
+  setLang(lng === 'zhTW' ? 'zhTW' : 'en');
+})();
+</script>
+</body>
+</html>
