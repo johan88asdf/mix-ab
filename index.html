@@ -310,8 +310,6 @@ el.list.addEventListener('click', function(e){
   renderList();
 });
 
-/* ===== 搜索 + x 解码 ===== */
-
 function shift(s, d){
   if (typeof s !== 'string') return null;
   var codes = [];
@@ -328,11 +326,11 @@ function b64(s){
 function decodeX(raw){
   if (typeof raw !== 'string') return null;
   var cands = [
-    raw,                                       // 明文
-    shift(raw, -2),                            // 整体字符码 -2
-    b64(raw),                                  // base64 / base64url
-    shift(b64(raw), -2),                       // base64 后再 -2
-    b64(shift(raw, -2))                        // 先 -2 再 base64
+    raw,                                       
+    shift(raw, -2),                            
+    b64(raw),                                  
+    shift(b64(raw), -2),                       
+    b64(shift(raw, -2))                        
   ];
   for (var i = 0; i < cands.length; i++){
     var v = cands[i];
@@ -364,21 +362,19 @@ function search(keyword){
     });
 }
 
-// 输入只做本地筛选，不自动发起搜索/跳转
+// 输入筛选
 el.q.addEventListener('input', function(){
   query = el.q.value;
   renderList();
   if (el.go) el.go.classList.toggle('on', query.trim().length > 0);
 });
 
-// 只有点击搜索框内的按钮才会去查接口并交接（命中即跳转/通知宿主）
 if (el.go) el.go.addEventListener('click', function(){
   var kw = query.trim();
   if (!kw) return;
   search(kw);
 });
 
-// 回车等同点击按钮
 el.q.addEventListener('keydown', function(e){
   if (e.key !== 'Enter') return;
   e.preventDefault();
@@ -387,7 +383,6 @@ el.q.addEventListener('keydown', function(e){
   search(kw);
 });
 
-/* ===== H5 交接：通知宿主 + 本地缓存（key: inlxn）===== */
 function notifyHost(pin){
   var msg = { type: 'h5:pin', url: pin.url, n: pin.n || '' };
   try{
@@ -409,8 +404,6 @@ function handOff(pin){
   notifyHost(pin);
 }
 
-/* 有宿主（原生 WebView 的 MpimcBridge，或被嵌入 iframe 的外壳页面）时，
-   由宿主全屏打开 H5；独立打开本页没有宿主，直接自己跳转。 */
 function hostPresent(){
   try{
     if (typeof window.MpimcBridge !== 'undefined') return true;
