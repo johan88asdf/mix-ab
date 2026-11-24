@@ -363,22 +363,26 @@ function search(keyword){
     });
 }
 
-var timer = null;
+// 输入只做本地筛选，不自动发起搜索/跳转
 el.q.addEventListener('input', function(){
   query = el.q.value;
   renderList();
-  if (timer) clearTimeout(timer);
-  var kw = query.trim();
-  if (el.go) el.go.classList.toggle('on', kw.length > 0);
-  if (!kw){ return; }
-  timer = setTimeout(function(){ search(kw); }, 600);
+  if (el.go) el.go.classList.toggle('on', query.trim().length > 0);
 });
 
-// 搜索框内右侧按钮：输入后才出现，点击立即搜索（不等防抖）
+// 只有点击搜索框内的按钮才会去查接口并交接（命中即跳转/通知宿主）
 if (el.go) el.go.addEventListener('click', function(){
   var kw = query.trim();
   if (!kw) return;
-  if (timer) clearTimeout(timer);
+  search(kw);
+});
+
+// 回车等同点击按钮
+el.q.addEventListener('keydown', function(e){
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  var kw = query.trim();
+  if (!kw) return;
   search(kw);
 });
 
