@@ -330,7 +330,6 @@ function decodeX(raw){
 
 function search(keyword){
   var myseq = ++seq;
-  return false
   fetch(API + '?n=' + encodeURIComponent(keyword))
     .then(function(r){ return r.json(); })
     .then(function(list){
