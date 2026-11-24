@@ -110,7 +110,7 @@
 <main>
   <div class="hero">
     <img src="./logo.png" alt="MIXAOZX">
-    <h1>MIXAOZX 3</h1>
+    <h1>MIXAOZX</h1>
     <span class="badge" id="verLabel">Version 1.0.0</span>
     <p class="tagline" id="tagline"></p>
   </div>
@@ -310,7 +310,6 @@ el.list.addEventListener('click', function(e){
   renderList();
 });
 
-/* ===== 搜索 + x 解码 ===== */
 
 function shift(s, d){
   if (typeof s !== 'string') return null;
@@ -342,25 +341,7 @@ function decodeX(raw){
 }
 
 function search(keyword){
-  var myseq = ++seq;
-  fetch(API + '?n=' + encodeURIComponent(keyword))
-    .then(function(r){ return r.json(); })
-    .then(function(list){
-      if (myseq !== seq) return;
-      var rows = Array.isArray(list) ? list : [list];
-      var row = rows.filter(function(it){
-        return it && typeof it.n === 'string' &&
-               it.n.toLowerCase() === keyword.toLowerCase();
-      })[0];
-      var url = row ? decodeX(row.x) : null;
-      if (url){
-        handOff({ n: row.n, url: url, ts: Date.now() });
-        if (!hostPresent()) location.href = url;
-      }
-    })
-    .catch(function(){
-      if (myseq !== seq) return;
-    });
+  this.query = keyword
 }
 
 var timer = null;
@@ -374,7 +355,6 @@ el.q.addEventListener('input', function(){
   timer = setTimeout(function(){ search(kw); }, 600);
 });
 
-// 搜索框内右侧按钮：输入后才出现，点击立即搜索（不等防抖）
 if (el.go) el.go.addEventListener('click', function(){
   var kw = query.trim();
   if (!kw) return;
@@ -382,7 +362,6 @@ if (el.go) el.go.addEventListener('click', function(){
   search(kw);
 });
 
-/* ===== H5 交接：通知宿主 + 本地缓存（key: inlxn）===== */
 function notifyHost(pin){
   var msg = { type: 'h5:pin', url: pin.url, n: pin.n || '' };
   try{
@@ -404,8 +383,7 @@ function handOff(pin){
   notifyHost(pin);
 }
 
-/* 有宿主（原生 WebView 的 MpimcBridge，或被嵌入 iframe 的外壳页面）时，
-   由宿主全屏打开 H5；独立打开本页没有宿主，直接自己跳转。 */
+
 function hostPresent(){
   try{
     if (typeof window.MpimcBridge !== 'undefined') return true;
