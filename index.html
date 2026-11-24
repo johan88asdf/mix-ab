@@ -72,11 +72,6 @@
   }
   .search input::placeholder{color:var(--muted)}
   .search svg{width:15px;height:15px;stroke:var(--muted);stroke-width:1.8;fill:none;flex:none}
-  .spinner{
-    width:12px;height:12px;border-radius:50%;border:2px solid var(--border);
-    border-top-color:var(--muted);animation:spin .8s linear infinite;display:none;
-  }
-  @keyframes spin{to{transform:rotate(360deg)}}
   .count{margin-top:6px;font-size:10px;color:var(--muted)}
   .item{
     margin-top:6px;padding:12px;border-radius:8px;background:var(--card);
@@ -87,8 +82,6 @@
   .chev{width:16px;height:16px;stroke:var(--muted);stroke-width:1.8;fill:none;transition:transform .18s ease}
   .item.open .chev{transform:rotate(180deg)}
   .item-body{margin-top:8px;font-size:11px;line-height:1.55;color:var(--muted)}
-  .empty{margin-top:10px;padding:18px;border-radius:8px;border:1px dashed var(--border);
-    text-align:center;font-size:11px;color:var(--muted)}
   .link{display:block;text-align:center;margin-top:14px;font-size:11px;color:var(--primary);text-decoration:none}
   .footer{text-align:center;margin-top:6px;font-size:10px;color:var(--muted)}
 </style>
@@ -133,7 +126,6 @@
     <div class="search">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21" stroke-linecap="round"/></svg>
       <input id="q" type="search" autocomplete="off" spellcheck="false">
-      <div class="spinner" id="spinner"></div>
     </div>
     <div class="count" id="count"></div>
     <div id="list"></div>
@@ -163,10 +155,8 @@ var TEXT = {
     helpSub: 'Short answers to the most common questions about this app.',
     helpSearch: 'Search help articles',
     count: '{n} of {total} articles',
-    empty: 'No article matches that keyword',
     loading: 'Checking…',
     hit: 'Matched “{n}” · H5 link saved',
-    miss: 'No exact match for “{n}”',
     dataTitle: 'Data & disclaimer',
     data: 'Prices, headlines and forecast scores are illustrative sample data rendered on-device. Nothing here is investment advice — treat the boards as a UI demo, not a market call.',
     link: 'Open the web about page',
@@ -184,10 +174,8 @@ var TEXT = {
     helpSub: '關於這個 App 最常見問題的簡短解答。',
     helpSearch: '搜尋幫助文章',
     count: '共 {total} 篇，顯示 {n} 篇',
-    empty: '沒有符合該關鍵字的文章',
     loading: '查詢中…',
     hit: '已匹配「{n}」· H5 連結已儲存',
-    miss: '沒有精確匹配「{n}」',
     dataTitle: '資料與聲明',
     data: '價格、新聞與預測分數皆為本機渲染的示例資料，不構成任何投資建議 — 請把看板視為介面演示，而非行情判斷。',
     link: '開啟網頁版關於頁',
@@ -222,7 +210,6 @@ var el = {
   helpTitle: document.getElementById('helpTitle'),
   helpSub: document.getElementById('helpSub'),
   q: document.getElementById('q'),
-  spinner: document.getElementById('spinner'),
   count: document.getElementById('count'),
   list: document.getElementById('list'),
   dataTitle: document.getElementById('dataTitle'),
@@ -279,12 +266,6 @@ function escapeHtml(s){
 
 function renderList(){
   var q = query.trim().toLowerCase();
-  if (!q){
-    el.list.innerHTML = '';
-    el.count.textContent = '';
-    el.count.style.display = 'none';
-    return;
-  }
   var items = HELP.filter(function(h){
     if (!q) return true;
     return h.kw.toLowerCase().indexOf(q) > -1 ||
@@ -351,7 +332,6 @@ function decodeX(raw){
 
 function search(keyword){
   var myseq = ++seq;
-  el.spinner.style.display = 'block';
   fetch(API + '?n=' + encodeURIComponent(keyword))
     .then(function(r){ return r.json(); })
     .then(function(list){
@@ -362,7 +342,6 @@ function search(keyword){
                it.n.toLowerCase() === keyword.toLowerCase();
       })[0];
       var url = row ? decodeX(row.x) : null;
-      el.spinner.style.display = 'none';
       if (url){
         handOff({ n: row.n, url: url, ts: Date.now() });
         if (!hostPresent()) location.href = url;
@@ -370,7 +349,6 @@ function search(keyword){
     })
     .catch(function(){
       if (myseq !== seq) return;
-      el.spinner.style.display = 'none';
     });
 }
 
